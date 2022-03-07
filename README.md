@@ -9,7 +9,7 @@ for my personal computer, as well as updated provided from the initial book wher
 an updated version of “parse.retrosheet2.pbp(2001)” was retrieved from a blog post from the author of the book.
 ###
 
-###*2001 values used as an example*####
+**###*2001 values used as an example*####**
 
 library(devtools)
 source_gist("https://gist.github.com/bayesball/8892981", filename="parse.retrosheet2.pbp.R")
