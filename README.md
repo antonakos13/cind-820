@@ -1,14 +1,13 @@
 # cind-820
 CIND 820 Final Project
 
-###Code applied to download play by play files, convert them into csv files, create the matrix in the analyzed year, 
+_###Code applied to download play by play files, convert them into csv files, create the matrix in the analyzed year, 
 measure the success of a batting play, and the mean value of a homerun, single, and stolen base in a given year. Using 
 the find key, quick search can be applied to select all values of the year, and replace all values with the next year, 
 and the code can be run again to find the respective values for the next year. The R code used has been slightly modified
 for my personal computer, as well as updated provided from the initial book where it was retrieved from. Additionally, 
-an updated version of “parse.retrosheet2.pbp(2001)” was retrieved from a blog post from the author of the book.
-###
-
+an updated version of “parse.retrosheet2.pbp(2001)” was retrieved from a blog post from the author of the book. ###
+_
 **###*2001 values used as an example*####**
 
 library(devtools)
