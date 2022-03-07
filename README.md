@@ -167,7 +167,7 @@ mean(stealing.1001$RUNS.VALUE)
 #################################################
 
 #################################################
-Cleaning and Assesting the Data
+# Cleaning and Assesting the Data
 #################################################
 
 install.packages("ggplot2")
