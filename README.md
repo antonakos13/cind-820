@@ -8,6 +8,8 @@ and the code can be run again to find the respective values for the next year. T
 for my personal computer, as well as updated provided from the initial book where it was retrieved from. Additionally, 
 an updated version of “parse.retrosheet2.pbp(2001)” was retrieved from a blog post from the author of the book. ###
 _
+
+
 **###*2001 values used as an example*####**
 
 library(devtools)
@@ -164,7 +166,9 @@ mean(stealing.1001$RUNS.VALUE)
 
 #################################################
 
-###Cleaning and Assesting the Data###
+#################################################
+Cleaning and Assesting the Data
+#################################################
 
 install.packages("ggplot2")
 library(ggplot2)
