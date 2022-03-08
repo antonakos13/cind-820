@@ -175,3 +175,160 @@ library(ggplot2)
 
 setwd("~/")
 RV_data <- read.csv("Runs value data.csv")
+
+Year <- RV_data$ï..Year
+HR_Run_Value <- RV_data$Home.Run.Runs.Value
+HR_Percentage <- RV_data$Home.Run.Percentage
+Single_Run_Value <- RV_data$Single.Runs.Value
+Single_Percentage <- RV_data$Single.Percentage
+SB_Run_Value <- RV_data$Stolen.Base.Runs.Value
+SB_Percentage <- RV_data$Stolen.Base.Percentage
+SB_APG <- RV_data$Stolen.Base.Attempts.Per.Game
+Strikeout_Percentage <- RV_data$Stikeout.Percentage
+
+```
+
+Initial Assessment of data, to analyze univariate data of each attribute being assessed.
+
+
+```{r}
+library("stats")
+library("psych")
+
+summary(Year)
+
+summary(HR_Run_Value)
+describe(HR_Run_Value)
+
+summary(HR_Percentage)
+describe(HR_Percentage)
+
+summary(Single_Run_Value)
+describe(Single_Run_Value)
+
+summary(Single_Percentage)
+describe(Single_Percentage)
+
+summary(SB_Run_Value)
+describe(SB_Run_Value)
+
+summary(SB_Percentage)
+describe(SB_Percentage)
+
+summary(SB_APG)
+describe(SB_APG)
+
+summary(Strikeout_Percentage)
+describe(Strikeout_Percentage)
+
+plot(RV_data)
+```
+
+Testing the correlation between the variables
+
+```{r}
+#Overall Correlation of entire data set
+cor(RV_data)
+
+#Correlation between the run value of a home run and the percentage of plate appearances that result in a home run. 
+cor.test(HR_Run_Value, HR_Percentage)
+
+#Correlation between the run value of a single and the percentage of hits that are singles.
+cor.test(Single_Run_Value, Single_Percentage)
+
+#Correlation between the run value of a stolen base and the percentage of stolen base attempts that are successful. 
+cor.test(SB_Run_Value, SB_Percentage)
+
+```
+
+Assessing the change of each variable over time. 
+
+
+```{r}
+#Run Value of a Home run over time
+plot(Year, HR_Run_Value, ylab = "HR Run Value", main= "Year vs HR Run Value") + abline(lm(HR_Run_Value~Year, data=RV_data))
+summary(lm(Year~HR_Run_Value))
+
+#Home Run Percentage over time
+plot(Year, HR_Percentage, ylab = "HR Run Percentage", main= "Year vs HR Percentage") + abline(lm(HR_Percentage~Year, data=RV_data))
+summary(lm(Year~HR_Percentage))
+
+#Run Value of a single over time
+plot(Year, Single_Run_Value, ylab = "Single Run Value", main= "Year vs Single Run Value") + abline(lm(Single_Run_Value~Year, data=RV_data))
+summary(lm(Year~Single_Run_Value))
+
+#Single percentage over time
+plot(Year, Single_Percentage, ylab = "Single Percentage", main= "Year vs Single Percentage") + abline(lm(Single_Percentage~Year, data=RV_data))
+summary(lm(Year~Single_Percentage))
+
+#Run Value of a stolen base over time
+plot(Year, SB_Run_Value, ylab = "Stolen Base Run Value", main= "Year vs Stolen Base Run Value") + abline(lm(SB_Run_Value~Year, data=RV_data))
+summary(lm(Year~SB_Run_Value))
+
+#Stolen Base percentage over time
+plot(Year, SB_Percentage, ylab = "Stolen Base Percentage", main= "Year vs Stolen Base Percentage") + abline(lm(SB_Percentage~Year, data=RV_data))
+summary(lm(Year~SB_Percentage))
+
+#Stolen Base attempts per game over time
+plot(Year, SB_APG, ylab = "SB Attempts Per Game", main= "Year vs SB Attempts Per Game") + abline(lm(SB_APG~Year, data=RV_data))
+summary(lm(Year~SB_APG))
+
+#Strikeout Percentage over time
+plot(Year, Strikeout_Percentage, ylab = "Strikeout Percentage", main= "Year vs Strikeout Percentage") + abline(lm(Strikeout_Percentage~Year, data=RV_data))
+summary(lm(Year~Strikeout_Percentage))
+
+```
+
+
+Predictive Analysis
+
+```{r}
+#building linear regression model
+library(caTools)
+
+sample.split(HR_Run_Value, SplitRatio = 0.70) -> split_tag
+subset(RV_data, split_tag==T) -> train
+subset(RV_data, split_tag==F) -> test
+
+lm(HR_Run_Value~Year, data = train) -> model1
+predict(model1, newdata = test) -> predicted_values
+head(predicted_values)
+
+cbind(Actual= test$Home.Run.Runs.Value, Predicted= predicted_values) -> final_data
+as.data.frame(final_data)-> final_data
+
+final_data$Actual - final_data$Predicted -> error
+cbind(final_data,error) ->final_data
+head(final_data)
+rmse <- sqrt(mean(final_data$error)^2)
+rmse
+```
+
+```{r}
+# multi linear regression model
+library(caTools)
+
+sample.split(HR_Run_Value, SplitRatio = 0.75) -> split_model
+subset(RV_data, split_model==T) -> train2
+subset(RV_data, split_model==F) -> test2
+
+lm(HR_Run_Value~Year+HR_Percentage+Single_Run_Value+Single_Percentage+SB_Run_Value+SB_Percentage+SB_APG+Strikeout_Percentage, data = train2) -> mod_multi_linear
+
+predict(mod_multi_linear, newdata = test2) -> predicted_multi_linear
+head(predicted_multi_linear)
+
+cbind(Actual= test2$Home.Run.Runs.Value, Predicted = predicted_multi_linear) -> final_data2
+as.data.frame(final_data2) ->final_data2
+head(final_data2)
+
+final_data2$Actual - final_data2$Predicted -> error2
+head(error)
+
+cbind(final_data2,error2) ->final_data2
+head(final_data2)
+
+rmse_ml<- sqrt(mean((final_data2$error2)^2))
+rmse_ml
+```
+Lower model presented above is the first linear regression model when assesing the run value of a home run. 
+
